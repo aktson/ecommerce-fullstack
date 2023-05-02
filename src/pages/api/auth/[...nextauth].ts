@@ -4,7 +4,6 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/lib/models/User";
-import db from "@/lib/db/db";
 
 export const authOptions: NextAuthOptions = {
 	session: {
@@ -27,7 +26,7 @@ export const authOptions: NextAuthOptions = {
 		},
 		async session({ session, token }) {
 			if (token) {
-				session.user.id = token._id as string;
+				session.user.id = token.id as string;
 				session.user.name = token.name;
 				session.user.email = token.email;
 				session.user.isAdmin = token.isAdmin;
@@ -66,14 +65,9 @@ export const authOptions: NextAuthOptions = {
 					throw new Error("Please fill up all fields");
 				}
 
-				//connect to database
-				await db.connect();
 				const user = await User.findOne({
 					email: email,
 				});
-				//disconnect to database
-				await db.disconnect();
-
 				if (!user) {
 					throw new Error("No user found");
 				}

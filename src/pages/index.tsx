@@ -10,7 +10,7 @@ interface HomeProps {}
 
 const Home: FC<HomeProps> = (): JSX.Element => {
 	const { data: session, status } = useSession();
-
+	console.log(session);
 	/*** Return statement ***/
 	return (
 		<Layout>
